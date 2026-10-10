@@ -1,0 +1,18 @@
+{
+  "sources": [
+    {
+      "name": "IPTV Canlı Yayın",
+      "url": "https://iptv.canli.com.tr/playlist.m3u",
+      "type": "m3u",
+      "check_interval": 86400,
+      "timeout": 10
+    },
+    {
+      "name": "Film Dizi Kanalları",
+      "url": "https://filmdizi.org/tvlist.xml",
+      "type": "xml",
+      "check_interval": 86400,
+      "timeout": 10
+    }
+  ]
+}
