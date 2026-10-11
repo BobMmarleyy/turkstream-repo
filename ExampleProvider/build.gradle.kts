@@ -5,7 +5,7 @@ version = 1
 cloudstream {
     // All of these properties are optional, you can safely remove them
 
-    description = "Lorem Ipsum"
+    description = "TurkStream Example Provider - placeholder for Turkish content providers"
     authors = listOf("Cloudburst")
 
     /**
