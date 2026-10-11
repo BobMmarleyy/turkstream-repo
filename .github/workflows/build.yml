@@ -60,7 +60,13 @@ jobs:
           export ANDROID_HOME=$HOME/android-sdk
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
-          ./gradlew make makePluginsJson || { echo "Gradle build failed"; exit 1; }
+          echo "Running Gradle build..."
+          ./gradlew make makePluginsJson 2>&1 | tee /tmp/gradle-output.log || { 
+            echo "Gradle build failed. Last 50 lines of output:"; 
+            tail -50 /tmp/gradle-output.log; 
+            exit 1; 
+          }
+          echo "Build completed successfully"
           ls -la **/build/*.cs3 || true
           cp **/build/*.cs3 $GITHUB_WORKSPACE/builds || true
           cp build/plugins.json $GITHUB_WORKSPACE/builds
