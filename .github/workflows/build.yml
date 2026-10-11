@@ -19,17 +19,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      ANDROID_HOME: ${{ github.workspace }}/android-sdk
     
     steps:
       - name: Checkout source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: "src"
 
       - name: Checkout builds branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: "builds"
           path: "builds"
@@ -38,17 +36,10 @@ jobs:
         run: rm $GITHUB_WORKSPACE/builds/*.cs3 || true
 
       - name: Setup JDK 11
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '11'
           distribution: 'temurin'
-
-      - name: Debug environment
-        run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          echo "PATH=$PATH"
-          which sdkmanager || echo "sdkmanager not found"
-          ls -la $ANDROID_HOME 2>/dev/null || echo "ANDROID_HOME does not exist"
 
       - name: Install Android SDK command-line tools
         run: |
