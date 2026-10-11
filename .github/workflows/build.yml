@@ -90,5 +90,9 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add .
-          git commit --amend -m "Build $GITHUB_SHA" || exit 0
-          git push --force origin builds
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Build artifacts from $GITHUB_SHA"
+            git push origin builds
+          else
+            echo "No changes to commit"
+          fi
