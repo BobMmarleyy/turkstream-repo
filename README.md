@@ -20,3 +20,7 @@ Bu repo, Cloudstream için Türkçe film/dizi eklentileri ve canlı TV/IPTV kayn
 ## Testler
 
 - `tests/` dizini altında otomatik testler bulunur
+
+## Build Status
+
+[![Build Plugins](https://github.com/BobMmarleyy/turkstream-repo/actions/workflows/build.yml/badge.svg)](https://github.com/BobMmarleyy/turkstream-repo/actions/workflows/build.yml)
