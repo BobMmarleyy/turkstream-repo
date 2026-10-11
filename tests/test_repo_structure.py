@@ -34,7 +34,7 @@ class TestRepoStructure(unittest.TestCase):
         with open(path, 'r') as f:
             data = json.load(f)
         
-        expected_url = "https://raw.githubusercontent.com/BobMmarleyy/turkstream-repo/main/plugins.json"
+        expected_url = "https://raw.githubusercontent.com/BobMmarleyy/turkstream-repo/builds/plugins.json"
         self.assertEqual(data['pluginLists'][0], expected_url)
     
     def test_sources_json_valid(self):
