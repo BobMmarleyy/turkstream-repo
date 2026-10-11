@@ -19,6 +19,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      ANDROID_HOME: ${{ github.workspace }}/android-sdk
+    
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
@@ -63,9 +66,11 @@ jobs:
 
       - name: Build Plugins
         run: |
+          export ANDROID_HOME=$HOME/android-sdk
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
-          ./gradlew make makePluginsJson
+          ./gradlew make makePluginsJson || { echo "Gradle build failed"; exit 1; }
+          ls -la **/build/*.cs3 || true
           cp **/build/*.cs3 $GITHUB_WORKSPACE/builds || true
           cp build/plugins.json $GITHUB_WORKSPACE/builds
 
