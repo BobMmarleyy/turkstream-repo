@@ -40,15 +40,23 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
+      - name: Debug environment
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          echo "PATH=$PATH"
+          which sdkmanager || echo "sdkmanager not found"
+          ls -la $ANDROID_HOME 2>/dev/null || echo "ANDROID_HOME does not exist"
+
       - name: Install Android SDK command-line tools
         run: |
-          mkdir -p $ANDROID_HOME/cmdline-tools
+          mkdir -p $HOME/android-sdk/cmdline-tools
           curl -L https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -o /tmp/cmdline-tools.zip
-          unzip -q /tmp/cmdline-tools.zip -d $ANDROID_HOME/cmdline-tools
-          mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+          unzip -q /tmp/cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools
+          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
 
       - name: Install Android SDK components
         run: |
+          export ANDROID_HOME=$HOME/android-sdk
           export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
           echo "y" | sdkmanager --licenses || true
           sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
