@@ -1,0 +1,16 @@
+[
+  {
+    "name": "IPTV Canl\u0131 Yay\u0131n",
+    "url": "https://iptv.canli.com.tr/playlist.m3u",
+    "status": false,
+    "message": "Ba\u011flant\u0131 hatas\u0131",
+    "timestamp": "2026-10-10T08:47:29.890282"
+  },
+  {
+    "name": "Film Dizi Kanallar\u0131",
+    "url": "https://filmdizi.org/tvlist.xml",
+    "status": false,
+    "message": "Ba\u011flant\u0131 hatas\u0131",
+    "timestamp": "2026-10-10T08:47:29.949809"
+  }
+]
