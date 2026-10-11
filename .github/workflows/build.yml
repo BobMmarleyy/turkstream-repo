@@ -40,8 +40,10 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
+      - name: Install Android SDK components
+        run: |
+          echo "y" | sdkmanager --licenses || true
+          sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
 
       - name: Build Plugins
         run: |
