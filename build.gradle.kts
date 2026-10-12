@@ -41,6 +41,7 @@ subprojects {
     }
 
     android {
+        namespace = "com.example"
         compileSdkVersion(30)
 
         defaultConfig {
