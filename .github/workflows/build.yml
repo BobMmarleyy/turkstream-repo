@@ -57,6 +57,8 @@ jobs:
           sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
 
       - name: Build Plugins
+        env:
+          ANDROID_HOME: ${{ github.workspace }}/android-sdk
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
