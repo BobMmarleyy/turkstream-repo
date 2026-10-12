@@ -41,13 +41,29 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
+      - name: Install Android SDK command-line tools
+        run: |
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          curl -L https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -o /tmp/cmdline-tools.zip
+          unzip -q /tmp/cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools
+          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
+
+      - name: Install Android SDK components
+        run: |
+          export ANDROID_HOME=$HOME/android-sdk
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+          echo "y" | sdkmanager --licenses || true
+          sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
 
       - name: Build Plugins
+        env:
+          ANDROID_HOME: $HOME/android-sdk
+          ANDROID_SDK_ROOT: $HOME/android-sdk
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
+          
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
           
           echo "=== Building ExampleProvider ==="
           ./gradlew make makePluginsJson 2>&1 | tee /tmp/gradle-build.log
