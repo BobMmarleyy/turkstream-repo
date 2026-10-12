@@ -61,9 +61,12 @@ jobs:
           ANDROID_SDK_ROOT: $HOME/android-sdk
         run: |
           cd $GITHUB_WORKSPACE/src
-          chmod +x gradlew
           
+          # Create local.properties with absolute path
           echo "sdk.dir=$ANDROID_HOME" > local.properties
+          cat local.properties
+          
+          chmod +x gradlew
           
           echo "=== Building ExampleProvider ==="
           ./gradlew make makePluginsJson 2>&1 | tee /tmp/gradle-build.log
