@@ -53,7 +53,7 @@ jobs:
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
           echo "y" | sdkmanager --licenses || true
-          sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
+          sdkmanager "platform-tools" "build-tools;35.0.0" "platforms;android-35"
 
       - name: Build Plugins
         env:
@@ -62,9 +62,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/src
           
-          # Create local.properties with absolute path
           echo "sdk.dir=$ANDROID_HOME" > local.properties
-          cat local.properties
           
           chmod +x gradlew
           
