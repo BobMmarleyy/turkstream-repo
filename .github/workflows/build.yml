@@ -59,9 +59,12 @@ jobs:
       - name: Build Plugins
         env:
           ANDROID_HOME: ${{ github.workspace }}/android-sdk
+          ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
+          
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
           
           echo "=== Building ExampleProvider ==="
           ./gradlew ExampleProvider:make 2>&1 | tee /tmp/gradle-build.log
