@@ -19,6 +19,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      ANDROID_HOME: ${{ github.workspace }}/android-sdk
+      ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
     
     steps:
       - name: Checkout source
@@ -61,6 +64,9 @@ jobs:
           export ANDROID_SDK_ROOT=$HOME/android-sdk
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
+          
+          # Create local.properties with SDK location
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
           
           echo "=== Building ExampleProvider ==="
           ./gradlew ExampleProvider:make 2>&1 | tee /tmp/gradle-build.log
