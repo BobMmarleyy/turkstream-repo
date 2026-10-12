@@ -19,13 +19,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@master
+      - name: Checkout source
+        uses: actions/checkout@v4
         with:
           path: "src"
 
-      - name: Checkout builds
-        uses: actions/checkout@master
+      - name: Checkout builds branch
+        uses: actions/checkout@v4
         with:
           ref: "builds"
           path: "builds"
@@ -38,16 +38,63 @@ jobs:
         with:
           java-version: 17
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
+      - name: Install Android SDK command-line tools
+        run: |
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          curl -L https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -o /tmp/cmdline-tools.zip
+          unzip -q /tmp/cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools
+          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
+
+      - name: Install Android SDK components
+        run: |
+          export ANDROID_HOME=$HOME/android-sdk
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+          echo "y" | sdkmanager --licenses || true
+          sdkmanager "platform-tools" "build-tools;35.0.0" "platforms;android-35"
 
       - name: Build Plugins
+        env:
+          ANDROID_HOME: $HOME/android-sdk
+          ANDROID_SDK_ROOT: $HOME/android-sdk
         run: |
           cd $GITHUB_WORKSPACE/src
+          
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          
           chmod +x gradlew
-          ./gradlew make makePluginsJson
-          cp **/build/*.cs3 $GITHUB_WORKSPACE/builds
-          cp build/plugins.json $GITHUB_WORKSPACE/builds
+          
+          ./gradlew make makePluginsJson 2>&1 | tee /tmp/gradle-build.log
+          
+          # Check if build was successful
+          if grep -q "BUILD SUCCESSFUL" /tmp/gradle-build.log; then
+            echo "Gradle build was successful"
+            
+            # Copy built artifacts to builds directory
+            CS3_FILES=$(find . -name "*.cs3" -type f 2>/dev/null)
+            if [ -n "$CS3_FILES" ]; then
+              echo "Found .cs3 files:"
+              echo "$CS3_FILES"
+              for file in $CS3_FILES; do
+                cp "$file" $GITHUB_WORKSPACE/builds/
+              done
+              echo "Copied .cs3 files to builds directory"
+            else
+              echo "No .cs3 files found after successful build"
+            fi
+            
+            # Copy generated plugins.json
+            if [ -f build/plugins.json ]; then
+              cp build/plugins.json $GITHUB_WORKSPACE/builds/
+              echo "Copied generated plugins.json"
+            else
+              echo "Creating empty plugins.json"
+              echo '[]' > $GITHUB_WORKSPACE/builds/plugins.json
+            fi
+          else
+            echo "Gradle build failed"
+            tail -50 /tmp/gradle-build.log
+            exit 1
+          fi
 
       - name: Push builds
         run: |
