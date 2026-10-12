@@ -58,6 +58,7 @@ jobs:
       - name: Build Plugins
         run: |
           export ANDROID_HOME=$HOME/android-sdk
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
           
