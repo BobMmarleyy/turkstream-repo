@@ -49,7 +49,11 @@ jobs:
         run: |
           export ANDROID_HOME=$HOME/android-sdk
           export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
-          echo "y" | sdkmanager --licenses || true
+          
+          # Accept all licenses
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          
+          # Install required components
           sdkmanager "platform-tools" "build-tools;35.0.0" "platforms;android-35"
 
       - name: Build Plugins
