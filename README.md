@@ -8,7 +8,7 @@ Bu repo, Cloudstream için Türkçe film/dizi eklentileri ve canlı TV/IPTV kayn
 2. Ayarlar → Eklentiler → Depo ekle
 3. Aşağıdaki URL'yi girin:
    ```
-   https://raw.githubusercontent.com/<username>/turkstream-repo/main/repo.json
+   https://raw.githubusercontent.com/BobMmarleyy/turkstream-repo/main/repo.json
    ```
 
 ## Yapılandırma

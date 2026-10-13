@@ -3,6 +3,6 @@
   "description": "Cloudstream için Türkçe film/dizi eklentileri ve canlı TV/IPTV kaynaklarını yöneten bir depo sistemi",
   "manifestVersion": 1,
   "pluginLists": [
-    "https://raw.githubusercontent.com/<username>/turkstream-repo/main/plugins.json"
+    "https://raw.githubusercontent.com/BobMmarleyy/turkstream-repo/builds/plugins.json"
   ]
 }
