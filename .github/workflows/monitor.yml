@@ -24,6 +24,10 @@ jobs:
         run: |
           pip install -r requirements.txt
           
+      - name: Run tests first
+        run: |
+          python -m pytest tests/ -v
+          
       - name: Run monitor
         run: |
           python monitor.py

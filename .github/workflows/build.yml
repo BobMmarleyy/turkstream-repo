@@ -1,0 +1,78 @@
+name: Build
+
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency
+concurrency: 
+  group: "build"
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+      - feature/cloudstream-plugin
+    paths-ignore:
+      - '*.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+        with:
+          path: "src"
+
+      - name: Checkout builds
+        uses: actions/checkout@master
+        with:
+          ref: "builds"
+          path: "builds"
+      
+      - name: Clean old builds
+        run: rm $GITHUB_WORKSPACE/builds/*.cs3 || true
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+      - name: Install Android SDK command-line tools
+        run: |
+          mkdir -p $HOME/android-sdk/cmdline-tools
+          curl -L https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -o /tmp/cmdline-tools.zip
+          unzip -q /tmp/cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools
+          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
+
+      - name: Install Android SDK components
+        run: |
+          export ANDROID_HOME=$HOME/android-sdk
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+          
+          # Accept all licenses non-interactively
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          
+          # Install required components
+          sdkmanager "platform-tools" "build-tools;35.0.0" "platforms;android-35"
+
+      - name: Build Plugins
+        env:
+          ANDROID_HOME: $HOME/android-sdk
+          ANDROID_SDK_ROOT: $HOME/android-sdk
+        run: |
+          cd $GITHUB_WORKSPACE/src
+          
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          
+          chmod +x gradlew
+          ./gradlew make makePluginsJson
+          cp **/build/*.cs3 $GITHUB_WORKSPACE/builds
+          cp build/plugins.json $GITHUB_WORKSPACE/builds
+
+      - name: Push builds
+        run: |
+          cd $GITHUB_WORKSPACE/builds
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add .
+          git commit --amend -m "Build $GITHUB_SHA" || exit 0   # do not error if nothing to commit
+          git push --force
