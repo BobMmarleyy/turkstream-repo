@@ -55,18 +55,18 @@ jobs:
           sdkmanager "platform-tools" "build-tools;35.0.0" "platforms;android-35"
 
       - name: Build Plugins
-        env:
-          ANDROID_HOME: $HOME/android-sdk
-          ANDROID_SDK_ROOT: $HOME/android-sdk
         run: |
-          cd $GITHUB_WORKSPACE/src
-          
+          # $HOME must be expanded by bash at runtime; values in an env: block are literal strings
+          export ANDROID_HOME="$HOME/android-sdk"
+          export ANDROID_SDK_ROOT="$HOME/android-sdk"
+          cd "$GITHUB_WORKSPACE/src"
+
           echo "sdk.dir=$ANDROID_HOME" > local.properties
-          
+
           chmod +x gradlew
           ./gradlew make makePluginsJson
-          cp **/build/*.cs3 $GITHUB_WORKSPACE/builds
-          cp build/plugins.json $GITHUB_WORKSPACE/builds
+          cp **/build/*.cs3 "$GITHUB_WORKSPACE/builds"
+          cp build/plugins.json "$GITHUB_WORKSPACE/builds"
 
       - name: Push builds
         run: |
