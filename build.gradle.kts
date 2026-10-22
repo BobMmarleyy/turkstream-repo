@@ -15,7 +15,7 @@ buildscript {
         classpath("com.android.tools.build:gradle:8.7.3")
         // Cloudstream gradle plugin which makes everything work and builds plugins
         classpath("com.github.recloudstream:gradle:-SNAPSHOT")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.0") // matches current cloudstream stub metadata (2.4.0)
     }
 }
 
@@ -51,13 +51,13 @@ subprojects {
         }
 
         compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
+            sourceCompatibility = JavaVersion.VERSION_11
+            targetCompatibility = JavaVersion.VERSION_11
         }
 
         tasks.withType<KotlinJvmCompile> {
             compilerOptions {
-                jvmTarget.set(JvmTarget.JVM_1_8) // Required
+                jvmTarget.set(JvmTarget.JVM_11) // current cloudstream stub is JVM-11 bytecode; inlining requires >= 11
                 freeCompilerArgs.addAll(
                     "-Xno-call-assertions",
                     "-Xno-param-assertions",
@@ -78,11 +78,15 @@ subprojects {
         // but you don't need to include any of them if you don't need them.
         // https://github.com/recloudstream/cloudstream/blob/master/app/build.gradle.kts
         implementation(kotlin("stdlib")) // Adds Standard Kotlin Features
-        implementation("com.github.Blatzar:NiceHttp:0.4.11") // HTTP Lib
-        implementation("org.jsoup:jsoup:1.18.3") // HTML Parser
+        implementation("com.github.Blatzar:NiceHttp:0.4.13") // HTTP Lib (matches bob-source)
+        implementation("org.jsoup:jsoup:1.19.1") // HTML Parser (matches bob-source)
+        implementation("org.jspecify:jspecify:1.0.0") // annotation-only; jsoup 1.19 API references org.jspecify @Nullable
         // IMPORTANT: Do not bump Jackson above 2.13.1, as newer versions will
         // break compatibility on older Android devices.
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1") // JSON Parser
+        implementation("com.fasterxml.jackson.core:jackson-databind:2.16.0") // JSON-nesne dönüştürme (matches bob-source)
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1") // asenkron işlemler (matches bob-source)
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0") // (matches bob-source)
     }
 }
 
