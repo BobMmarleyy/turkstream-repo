@@ -4,13 +4,13 @@
     "url": "https://iptv.canli.com.tr/playlist.m3u",
     "status": false,
     "message": "Hata olu\u015ftu: HTTPSConnectionPool(host='iptv.canli.com.tr', port=443): Max retries exceeded with url: /playlist.m3u (Caused by NameResolutionError(\"HTTPSConnection(host='iptv.canli.com.tr', port=443): Failed to resolve 'iptv.canli.com.tr' ([Errno -2] Name or service not known)\"))",
-    "timestamp": "2026-10-26T18:13:42.517934"
+    "timestamp": "2026-10-26T22:19:27.649807"
   },
   {
     "name": "Film Dizi Kanallar\u0131",
     "url": "https://filmdizi.org/tvlist.xml",
     "status": false,
     "message": "Zaman a\u015f\u0131m\u0131 olu\u015ftu",
-    "timestamp": "2026-10-26T18:14:02.723014"
+    "timestamp": "2026-10-26T22:19:47.867744"
   }
 ]
